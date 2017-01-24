@@ -1,0 +1,27 @@
+{
+  "name": "js-es6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garryli/js-es6.git"
+  },
+  "keywords": [
+    "webpack",
+    "es6"
+  ],
+  "author": "Garry Li",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/garryli/js-es6/issues"
+  },
+  "homepage": "https://github.com/garryli/js-es6#readme",
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10"
+  }
+}
