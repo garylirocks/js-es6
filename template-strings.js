@@ -4,7 +4,8 @@
 function createEmail(firstName, purchasePrice) {
     var shipping = 10.0;
 
-    // use ${} to surround variables or expressions in backticks
+    // NOTE use ${} to surround variables or expressions in backticks
+	//	in '$$', the first '$' here is for outputting a literal '$' character
     console.log(
         `Hi ${firstName}, Thanks for buying from us!
             Total: $${purchasePrice}
