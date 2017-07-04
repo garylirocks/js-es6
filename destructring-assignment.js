@@ -9,7 +9,7 @@ var people = {
     'country': 'NZ',
 };
 
-var {age, name} = people;
+var {age, name} = people;	// NOTE you need to use the keys on left hand side
 console.log (`${name} is ${age}`);
 
 // destructuring assignment for function arguments
