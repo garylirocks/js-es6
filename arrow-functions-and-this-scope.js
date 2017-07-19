@@ -28,7 +28,7 @@ var person = {
         }.bind(this));
     },
 
-    // use arrow function syntax
+    // NOTE use arrow function syntax, `this` always binds to the context of its definition 
     'print4': function(){
         console.log("// use arrow function syntax");
         this.hobbies.forEach(hobby => {
