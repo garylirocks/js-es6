@@ -13,7 +13,7 @@ class People {
 }
 
 class Men extends People {          // class inheritance
-    // static let arms = 2;         // NOTE this is not allowed, you can not declare a static property
+    // static let arms = 2;         // NOTE this is supported by ES-NEXT only
 
     static legs() {                 // NOTE a static method attached to the class directly
         return 2;
