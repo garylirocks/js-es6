@@ -1,33 +1,69 @@
 // NOTE a general promise demo
 
-function doAsync() {
-    let p = new Promise(function (resolve, reject) {
-        console.log('in promise code');
-
+// a Promise object generator, resolve or reject depending on the parameter
+let getPromise = function getPromise(shouldResolve = true) {
+    return new Promise(function (resolve, reject) {
         setTimeout(function() {
-            console.log('resolving ...');
-            resolve('OK');
-        }, 2000);
+            if (shouldResolve) {
+                resolve('good');
+            } else {
+                reject(new Error('bad'));      // <- usually pass an Error to reject
+            }
+        }, 100);
     });
-
-    return p;
 }
 
-let promise = doAsync();
+let getResolvedPromise = () => getPromise();
+let getRejectedPromise = () => getPromise(false);
 
-// NOTE when the 'then' actions are chained together, each of them becomes a
-//          promise by itself, it resolves when the parent/previous promise resolves and
-//          pass the return value to later actions
-promise.then(function(value) { // <- chains to the main promise, and creates another promise object
-    console.log('successfully done 1: ' + value);
-    return 'Cool';
-}).then(function(value) {   // <- this one actually chains to a new promise created by the previous 'then'
-    console.log('successfully done 2: ' + value);
-    return 'Well Done';
-});
+let resolvedCallback = function resolvedCallback(value) {
+    console.log('resolvedCallback ' + value);
+    return 'resolved';
+};
 
-setTimeout(function() {
-    promise.then(function(value) {
-        console.log('a done action after resolving: ' + value);
-    });
-}, 3000);
+let rejectedCallback = function rejectedCallback(error) {
+    console.log('rejectedCallback ' + error);
+    return 'rejected';
+};
+
+let throwCallback = function throwCallback(error) {
+    console.log('throwCallback running');
+    throw new Error('a thrown error');
+}
+
+
+/**
+ * you can provide both resolved and rejected callbacks to then()
+ * and it creates a new promise, the new promise is usually resolved, unless
+ *  1. if no matching callback provided, then the new promise inherits the status of the previous promise;
+ *  2. if the running callback (no matter resolved or rejected) throws an error, then new promise is rejected;
+ */ 
+getRejectedPromise()                                    //                      -> rejected
+    .then(resolvedCallback, rejectedCallback)           // rejectedCallback run -> resolved
+    .then(resolvedCallback, rejectedCallback);          // resolvedCallback run -> resolved
+
+getRejectedPromise()                                    //                      -> rejected
+    .then(resolvedCallback)                             // no matching, pass on -> rejected
+    .then(resolvedCallback, rejectedCallback);          // rejectedCallback run -> resolved
+
+getResolvedPromise()                                    //                      -> resolved
+    .then(null, rejectedCallback)                       // no matching, pass on -> resolved 
+    .then(resolvedCallback, rejectedCallback);          // resolvedCallback run -> resolved
+
+getResolvedPromise()                                    //                      -> resolved
+    .then(throwCallback)                                // throw an error       -> rejected
+    .then(resolvedCallback, rejectedCallback)           // rejectedCallback run -> resolved
+    .then(resolvedCallback, rejectedCallback);          // resolvedCallback run -> resolved
+
+/**
+ * it is recommended to only pass the resolved callback to .then(), 
+ * and use .catch() to handle errors
+ * 
+ * .catch() is just a syntax sugar for .then(null, catchCallback)
+ */
+getResolvedPromise()               //                  -> resolved
+    .catch(rejectedCallback)        // not run, pass    -> resolved
+    .then(resolvedCallback)         // run              -> resolved
+    .then(throwCallback)            // run, throw       -> rejected
+    .then(resolvedCallback)         // not run, pass    -> rejected
+    .catch(rejectedCallback);       // run              -> resolved
