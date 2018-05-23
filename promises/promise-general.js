@@ -1,33 +1,54 @@
 // NOTE a general promise demo
+import { getBadPromise, getGoodPromise } from './promise-generator';
 
-function doAsync() {
-    let p = new Promise(function (resolve, reject) {
-        console.log('in promise code');
+let resolvedCallback = function resolvedCallback(value) {
+    console.log('resolvedCallback ' + value);
+    return 'resolved';
+};
 
-        setTimeout(function() {
-            console.log('resolving ...');
-            resolve('OK');
-        }, 2000);
-    });
+let rejectedCallback = function rejectedCallback(error) {
+    console.log('rejectedCallback ' + error);
+    return 'rejected';
+};
 
-    return p;
+let throwCallback = function throwCallback(error) {
+    console.log('throwCallback running');
+    throw new Error('a thrown error');
 }
 
-let promise = doAsync();
 
-// NOTE when the 'then' actions are chained together, each of them becomes a
-//          promise by itself, it resolves when the parent/previous promise resolves and
-//          pass the return value to later actions
-promise.then(function(value) { // <- chains to the main promise, and creates another promise object
-    console.log('successfully done 1: ' + value);
-    return 'Cool';
-}).then(function(value) {   // <- this one actually chains to a new promise created by the previous 'then'
-    console.log('successfully done 2: ' + value);
-    return 'Well Done';
-});
+/**
+ * you can provide both resolved and rejected callbacks to then()
+ * and it creates a new promise, the new promise is usually resolved, unless
+ *  1. if no matching callback provided, then the new promise inherits the status of the previous promise;
+ *  2. if the running callback (no matter resolved or rejected) throws an error, then new promise is rejected;
+ */ 
+getBadPromise ()                                    //                      -> rejected
+    .then(resolvedCallback, rejectedCallback)           // rejectedCallback run -> resolved
+    .then(resolvedCallback, rejectedCallback);          // resolvedCallback run -> resolved
 
-setTimeout(function() {
-    promise.then(function(value) {
-        console.log('a done action after resolving: ' + value);
-    });
-}, 3000);
+getBadPromise ()                                    //                      -> rejected
+    .then(resolvedCallback)                             // no matching, pass on -> rejected
+    .then(resolvedCallback, rejectedCallback);          // rejectedCallback run -> resolved
+
+getGoodPromise()                                    //                      -> resolved
+    .then(null, rejectedCallback)                       // no matching, pass on -> resolved 
+    .then(resolvedCallback, rejectedCallback);          // resolvedCallback run -> resolved
+
+getGoodPromise()                                    //                      -> resolved
+    .then(throwCallback)                                // throw an error       -> rejected
+    .then(resolvedCallback, rejectedCallback)           // rejectedCallback run -> resolved
+    .then(resolvedCallback, rejectedCallback);          // resolvedCallback run -> resolved
+
+/**
+ * it is recommended to only pass the resolved callback to .then(), 
+ * and use .catch() to handle errors
+ * 
+ * .catch() is just a syntax sugar for .then(null, catchCallback)
+ */
+getGoodPromise()               //                  -> resolved
+    .catch(rejectedCallback)        // not run, pass    -> resolved
+    .then(resolvedCallback)         // run              -> resolved
+    .then(throwCallback)            // run, throw       -> rejected
+    .then(resolvedCallback)         // not run, pass    -> rejected
+    .catch(rejectedCallback);       // run              -> resolved
