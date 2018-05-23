@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/garylirocks/js-es6#readme",
   "devDependencies": {
-    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.7.0",
     "es-module-loader": "^2.2.6",
