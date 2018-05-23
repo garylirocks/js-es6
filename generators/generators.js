@@ -29,7 +29,7 @@ for (let id of idMaker()) {
 // NOTE yield another iterable in a generator
 let myGenerator = function* () {
     yield 'start';
-    yield* [1, 2, 3];       // <- yield into another iterable
+    yield* [1, 2, 3];       // <- yield into another iterable, notice the '*' here
     yield 'end';
 };
 
@@ -41,3 +41,22 @@ for (let i of myGenerator()) {
 // 2
 // 3
 // end
+
+
+// convert an array to a generator
+function* eachItem(arr) {
+    yield* arr;
+}
+let letters = eachItem([1, 2, 3]);
+
+// use generator with setInterval
+let timer = setInterval(function(){
+    let letter = letters.next();    // this will return an object: {value: val, done: true|false}
+
+    if (!letter.done) {
+        console.log(letter.value);
+    } else {
+        clearInterval(timer);
+        console.log('Done');
+    }
+}, 500);

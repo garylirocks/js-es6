@@ -1,5 +1,5 @@
-// NOTE you can use a 'return' statement on a generator object
 
+// NOTE you can use a 'return' statement on a generator object
 function* langMaker() {
     yield 'C';
     yield 'JavaScript';
