@@ -2,7 +2,7 @@
  * See here: https://medium.com/@charpeni/arrow-functions-in-class-properties-might-not-be-as-great-as-we-think-3b3551c440b1
  * 
  * NOTE:
- *  * Arrow functions are added to the object instance, not the prototype, so are not accessible in subclass;
+ *  * Arrow functions are added to the object instance, not the prototype, so not available in super, but they are added to subclass's instances as well by the constructor;
  */
 
 class A {
