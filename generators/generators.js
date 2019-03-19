@@ -1,22 +1,18 @@
 // NOTE generators
-
-'use strict';
+"use strict";
 
 // NOTE define an infinite generator, the '*' marks this function is a generator
-let idMaker = function* () {
-    let nextId = 100;
+let idMaker = function*() {
+  let nextId = 100;
 
-    while(true) {
-        yield nextId++;
-    }
+  while (nextId <= 105) {
+    yield nextId++;
+  }
 };
 
 // NOTE generator function returns an iterable
 for (let id of idMaker()) {
-    if (id > 105) {
-        break;
-    }
-    console.log(id);
+  console.log(id);
 }
 // 100
 // 101
@@ -25,16 +21,30 @@ for (let id of idMaker()) {
 // 104
 // 105
 
+// NOTE use the iterable explicitly
+const ids = idMaker();
+
+const timer = setInterval(function() {
+  // the next method returns an object: { value: val, done: true|false }
+  let id = ids.next();
+
+  if (!id.done) {
+    console.log(id.value);
+  } else {
+    clearInterval(timer);
+    console.log("Done");
+  }
+}, 500);
 
 // NOTE yield another iterable in a generator
-let myGenerator = function* () {
-    yield 'start';
-    yield* [1, 2, 3];       // <- yield into another iterable
-    yield 'end';
+let myGenerator = function*() {
+  yield "start";
+  yield* [1, 2, 3]; // <- yield into another iterable
+  yield "end";
 };
 
 for (let i of myGenerator()) {
-    console.log(i);
+  console.log(i);
 }
 // start
 // 1
