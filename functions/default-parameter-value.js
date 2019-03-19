@@ -19,10 +19,10 @@ foo();
 let taxRate = (price) => 0.2 * price;
 function foo2(price = 20, tax = taxRate) {
 	console.log("price: " + price);
-	console.log("tax: " + taxRate(price));
+	console.log("tax: " + tax(price));
 }
 
-foo2();
+foo2(100);
 
 
 // NOTE create a dynamic function with the `Function` constructor

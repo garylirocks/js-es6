@@ -1,8 +1,3 @@
 
-require('./keyword-let.js');
-require('./keyword-const.js');
-
-require('./default-parameter-value.js');
-require('./template-strings.js');
-require('./spread-operators.js');
-require('./enhanced-object-literals.js');
+require('./variable-definition/keyword-let.js');
+require('./variable-definition/keyword-const.js');
